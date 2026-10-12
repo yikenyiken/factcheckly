@@ -1,0 +1,23 @@
+{
+    email {$ACME_EMAIL}
+    cert_issuer zerossl {$ZERO_SSL_API_KEY}
+}
+
+{$DOMAIN_NAME:http://localhost} {
+    # Serve generated slide images directly from shared volume
+    handle_path /images/* {
+        root * /public/images
+        file_server
+    }
+
+    # Route n8n webhooks for Discord review buttons and triggers
+    handle /webhook/* {
+        reverse_proxy n8n:5678
+    }
+    handle /webhook-waiting/* {
+        reverse_proxy n8n:5678
+    }
+
+    # Block everything else from public access
+    respond 404
+}

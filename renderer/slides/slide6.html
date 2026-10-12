@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8"/>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..900;1,9..40,100..900&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{width:1080px;height:1350px;background:#111;display:flex;align-items:center;justify-content:center}
+.slide{width:1080px;height:1350px;display:flex;flex-direction:column;border:3px solid #2a2a2a;overflow:hidden;font-family:'DM Sans',sans-serif;background:#111;padding:64px;position:relative}
+
+.s6-content{position:relative;z-index:1;flex:1;display:flex;flex-direction:column}
+
+.top-row{display:flex;align-items:center;justify-content:space-between}
+.slide-label{font-size:32px;font-weight:700;color:#fff;letter-spacing:.1em;background:#222;padding:12px 28px;border-radius:8px}
+.brand-row{display:flex;align-items:center;gap:16px;background:#222;padding:12px 24px 12px 16px;border-radius:8px}
+.brand-name-b{font-size:32px;font-weight:700;color:#fff;letter-spacing:.1em}
+
+.s6-center{flex:1;display:flex;flex-direction:column;justify-content:center;padding:80px 0}
+.s6-label{font-size:30px;font-weight:700;color:#fff;letter-spacing:.1em;margin-bottom:32px;background:#222;padding:10px 24px;border-radius:6px;display:inline-block}
+.s6-value{font-size:140px;font-weight:800;color:{{verdictColor}};line-height:1;margin-bottom:48px}
+.s6-statement{font-size:44px;font-weight:600;color:#bbb;line-height:1.65}
+
+.s6-bottom{margin-top:auto}
+.s6-divider{height:2px;background:#2a2a2a;margin-bottom:32px}
+.s6-score{display:flex;align-items:center;gap:20px}
+.s6-score-dot{width:16px;height:16px;border-radius:50%;background:{{verdictColor}}}
+.s6-score-text{font-size:32px;font-weight:600;color:#666}
+.s6-score-text span{color:{{verdictColor}};font-weight:700}
+</style>
+</head>
+<body>
+<div class="slide">
+  <div class="s6-content">
+    <div class="top-row">
+      <div class="slide-label">ANALYSIS</div>
+      <div class="brand-row">
+        <svg width="80px" height="80px" viewBox="190 30 300 300" xmlns="http://www.w3.org/2000/svg">
+          <rect x="190" y="30" width="300" height="300" rx="56" fill="#fff"/>
+          <circle cx="328" cy="168" r="86" fill="#f0f0f0"/>
+          <circle cx="328" cy="168" r="86" fill="none" stroke="#111" stroke-width="20"/>
+          <line x1="392" y1="232" x2="448" y2="288" fill="none" stroke="#111" stroke-width="20" stroke-linecap="round"/>
+          <polyline points="296,168 318,192 362,144" fill="none" stroke="rgb(74,222,128)" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span class="brand-name-b">FACTCHECKLY</span>
+      </div>
+    </div>
+    <div class="s6-center">
+      <div class="s6-label">FINDING</div>
+      <div class="s6-value">{{verdict}}</div>
+      <div class="s6-statement">{{finding}}</div>
+    </div>
+    <div class="s6-bottom">
+      <div class="s6-divider"></div>
+      <div class="s6-score">
+        <div class="s6-score-dot"></div>
+        <div class="s6-score-text">Credibility score <span>{{score}}/10</span> · {{verdict}}</div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

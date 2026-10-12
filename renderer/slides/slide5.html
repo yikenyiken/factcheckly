@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8"/>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..900;1,9..40,100..900&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{width:1080px;height:1350px;background:#111;display:flex;align-items:center;justify-content:center}
+.slide{width:1080px;height:1350px;display:flex;flex-direction:column;border:3px solid #2a2a2a;overflow:hidden;font-family:'DM Sans',sans-serif;background:#111}
+
+.s5-top-row{display:flex;align-items:center;justify-content:space-between;padding:64px 64px 0}
+.slide-label{font-size:32px;font-weight:700;color:#fff;letter-spacing:.1em;background:#222;padding:12px 28px;border-radius:8px}
+.brand-row{display:flex;align-items:center;gap:16px;background:#222;padding:12px 24px 12px 16px;border-radius:8px}
+.brand-name-b{font-size:32px;font-weight:700;color:#fff;letter-spacing:.1em}
+
+.s5-top-section{padding:48px 64px;flex:1;display:flex;flex-direction:column}
+.s5-bottom-section{padding:48px 64px;flex:1;display:flex;flex-direction:column}
+.s5-mid{height:2px;background:#2a2a2a}
+.s5-section-label{font-size:28px;font-weight:700;letter-spacing:.1em;margin-bottom:12px;display:flex;align-items:center;gap:16px}
+.s5-section-label.green{color:#38A169}
+.s5-section-label.red{color:#E53E3E}
+.s5-label-dot{width:16px;height:16px;border-radius:50%}
+.s5-label-dot.green{background:#38A169}
+.s5-label-dot.red{background:#E53E3E}
+.s5-desc{font-size:28px;font-weight:600;color:#555;margin-bottom:40px;line-height:1.4}
+.s5-source{display:flex;gap:32px;align-items:center;margin-bottom:36px}
+.s5-source:last-child{margin-bottom:0}
+.s5-bar{width:6px;height:56px;border-radius:4px;flex-shrink:0}
+.s5-bar.green{background:#68D391}
+.s5-bar.red{background:#FC8181}
+.s5-name{font-size:40px;font-weight:700;color:#fff;margin-bottom:8px}
+.s5-url{font-size:26px;font-weight:600;color:#555}
+
+.s5-footer{padding:32px 64px;border-top:2px solid #2a2a2a;display:flex;align-items:center;justify-content:space-between}
+.s5-footer-item{display:flex;align-items:center;gap:16px}
+.s5-footer-dot{width:16px;height:16px;border-radius:50%}
+.s5-footer-text{font-size:28px;font-weight:700;letter-spacing:.04em}
+.s5-footer-text.green{color:#38A169}
+.s5-footer-text.red{color:#E53E3E}
+.s5-caption-ref{padding:24px 64px;background:#0d0d0d;border-top:2px solid #2a2a2a;display:flex;align-items:center;gap:16px}
+.s5-caption-dot{width:12px;height:12px;border-radius:50%;background:#444}
+.s5-caption-text{font-size:24px;font-weight:600;color:#555;letter-spacing:.04em}
+</style>
+</head>
+<body>
+<div class="slide">
+  <div class="s5-top-row">
+    <div class="slide-label">SOURCES</div>
+    <div class="brand-row">
+      <svg width="80px" height="80px" viewBox="190 30 300 300" xmlns="http://www.w3.org/2000/svg">
+        <rect x="190" y="30" width="300" height="300" rx="56" fill="#fff"/>
+        <circle cx="328" cy="168" r="86" fill="#f0f0f0"/>
+        <circle cx="328" cy="168" r="86" fill="none" stroke="#111" stroke-width="20"/>
+        <line x1="392" y1="232" x2="448" y2="288" fill="none" stroke="#111" stroke-width="20" stroke-linecap="round"/>
+        <polyline points="296,168 318,192 362,144" fill="none" stroke="rgb(74,222,128)" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <span class="brand-name-b">FACTCHECKLY</span>
+    </div>
+  </div>
+  <div class="s5-top-section">
+    <div class="s5-section-label green"><div class="s5-label-dot green"></div>SUPPORTING</div>
+    <div class="s5-desc">Outlets reporting corroborating information</div>
+    {{supportingSourcesHtml}}
+  </div>
+  <div class="s5-mid"></div>
+  <div class="s5-bottom-section">
+    <div class="s5-section-label red"><div class="s5-label-dot red"></div>OPPOSING</div>
+    <div class="s5-desc">Outlets reporting contradicting information</div>
+    {{opposingSourcesHtml}}
+  </div>
+  <div class="s5-footer">
+    <div class="s5-footer-item"><div class="s5-footer-dot" style="background:#38A169"></div><span class="s5-footer-text green">{{supportingCount}} SUPPORTING</span></div>
+    <div class="s5-footer-item"><div class="s5-footer-dot" style="background:#E53E3E"></div><span class="s5-footer-text red">{{opposingCount}} OPPOSING</span></div>
+  </div>
+  <div class="s5-caption-ref">
+    <div class="s5-caption-dot"></div>
+    <span class="s5-caption-text">FULL ARTICLE LINKS AVAILABLE IN CAPTION</span>
+  </div>
+</div>
+</body>
+</html>

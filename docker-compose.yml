@@ -1,0 +1,68 @@
+services:
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      - DOMAIN_NAME=${DOMAIN_NAME}
+      - ZERO_SSL_API_KEY=${ZERO_SSL_API_KEY}
+      - ACME_EMAIL=${ACME_EMAIL}
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - caddy_data:/data
+      - caddy_config:/config
+      - shared_images:/public/images:ro
+    depends_on:
+      - n8n
+      - renderer
+
+  n8n:
+    image: docker.n8n.io/n8nio/n8n:latest
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:5678:5678"
+    environment:
+      - N8N_PORT=5678
+      - N8N_PROTOCOL=https
+      - N8N_BLOCK_ENV_ACCESS_IN_NODE=false
+      - WEBHOOK_URL=https://${DOMAIN_NAME}/
+      - GENERIC_TIMEZONE=${GENERIC_TIMEZONE:-UTC}
+      - NEWS_API_KEY=${NEWS_API_KEY}
+      - TAVILY_API_KEY=${TAVILY_API_KEY}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      - META_INSTAGRAM_ACCOUNT_ID=${META_INSTAGRAM_ACCOUNT_ID}
+      - META_ACCESS_TOKEN=${META_ACCESS_TOKEN}
+      - DOMAIN_NAME=${DOMAIN_NAME}
+    volumes:
+      - n8n_data:/home/node/.n8n
+
+  renderer:
+    build:
+      context: ./renderer
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    environment:
+      - PORT=3500
+    volumes:
+      - shared_images:/app/public/images
+
+  cleanup:
+      image: alpine
+      container_name: factcheckly-cleanup
+      restart: unless-stopped
+      volumes:
+        - shared_images:/public/images
+      command: >
+        sh -c "while true; do
+          echo '[Cleanup] Removing slide images older than 24 hours...';
+          find /public/images -name '*.jpg' -mmin +1440 -delete;
+          sleep 21600;
+        done"
+
+volumes:
+  caddy_data:
+  caddy_config:
+  n8n_data:
+  shared_images:

@@ -1,0 +1,509 @@
+{
+  "name": "My workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 8,12,16,20 * * *"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -1728,
+        128
+      ],
+      "id": "cbd4148c-bd7a-4c08-b6a0-75d2a89f8ec9",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "articles",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        -1312,
+        304
+      ],
+      "id": "c373876d-27af-4051-a3d5-2b6c602e7362",
+      "name": "Split Out"
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "operation": "sendAndWait",
+        "guildId": {
+          "__rl": true,
+          "value": "1497200906339487766",
+          "mode": "id"
+        },
+        "channelId": {
+          "__rl": true,
+          "value": "1497201362864439386",
+          "mode": "id"
+        },
+        "message": "=📰 NEW ARTICLE FOR REVIEW\n📌 Title: {{ $json.title }}\n🏢 Source: {{ $json.source }}\n⚖️ Verdict: {{ $json.verdict }}\n⭐ Score: {{ $json.score }}/10\n📝 Summary:\n{{ $json.summary }}\n🧠 Reasoning:\n{{ $json.reasoning1 }}\n{{ $json.reasoning2 }}\n🚩 Red Flags:\n{{ $json.flags.map(f => '• ' + f.title + ': ' + f.description).join('\\n') }}\n✅ Supporting Sources:\n{{ $json.supportingSources.map(s => s.name + (s.article_url ? ' - ' + s.article_url : '')).join('\\n') }}\n❌ Opposing Sources:\n{{ $json.opposingSources.map(s => s.name + (s.article_url ? ' - ' + s.article_url : '')).join('\\n') }}\n🔗 Original Article: {{ $json.url }}\n💡 Recommended Action: {{ $json.recommended_action }}\n👇 Approve to publish or Discard to skip",
+        "approvalOptions": {
+          "values": {
+            "approvalType": "double"
+          }
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.discord",
+      "typeVersion": 2,
+      "position": [
+        0,
+        0
+      ],
+      "id": "7101de0b-d023-429f-84f4-6c1e300e3185",
+      "name": "Send message and wait for response",
+      "webhookId": "3e8256c1-80e0-419f-a8d5-c31732422922",
+      "alwaysOutputData": false,
+      "credentials": {
+        "discordBotApi": {
+          "id": "9dGVM7ROvgJ4tr1I",
+          "name": "Discord Bot account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "5239ede7-8bc0-41af-88df-c4305f952303",
+              "leftValue": "={{ $json.data.approved }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        32,
+        304
+      ],
+      "id": "bda285f1-e48c-4285-89f3-237ee48ab1f5",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        256,
+        416
+      ],
+      "id": "7b1ab75a-a10c-4074-9159-90ac88a13d66",
+      "name": "Merge1"
+    },
+    {
+      "parameters": {
+        "url": "https://newsapi.org/v2/everything",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "apiKey",
+              "value": "={{ $env.NEWS_API_KEY }}"
+            },
+            {
+              "name": "language",
+              "value": "en"
+            },
+            {
+              "name": "sortBy",
+              "value": "publishedAt"
+            },
+            {
+              "name": "pageSize",
+              "value": "1"
+            },
+            {
+              "name": "q",
+              "value": "breaking news"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        -1536,
+        304
+      ],
+      "id": "24cce31a-2395-43a5-9f90-41909ad39bcc",
+      "name": "NewsApi"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.tavily.com/search",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{\n{\n  \"api_key\": $env.TAVILY_API_KEY,\n  \"query\": $json.title,\n  \"max_results\": 3,\n  \"search_depth\": \"basic\",\n  \"exclude_domains\": [\"instagram.com\", \"x.com\", \"twitter.com\", \"facebook.com\", \"tiktok.com\", \"linkedin.com\", \"reddit.com\", \"youtube.com\", \"msn.com\", \"yahoo.com\", \"aol.com\", \"flipboard.com\", \"google.com\"]\n}\n}}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        -1088,
+        304
+      ],
+      "id": "77e2914f-4ae1-47e9-851d-e9893cb02135",
+      "name": "tavily"
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "const results = $json.results.slice(0, 3).map(r => ({\n  title: r.title,\n  url: r.url,\n  snippet: r.content.slice(0, 300)\n}));\nreturn { json: { ...$('Split Out').item.json, tavily: results } };"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -864,
+        304
+      ],
+      "id": "e9838e36-4a71-4437-8906-93b0d53c8101",
+      "name": "tavily_results + original article"
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "// Parse Claude response\nconst text = $json.content[0].text;\nconst parsed = JSON.parse(text);\n\n// Split reasoning into two parts\nconst reasoning1 = parsed.reasoning.headline;\nconst reasoning2 = parsed.reasoning.detail;\n\n// NewsAPI fields from upstream node\nconst newsItem = $('Split Out').item.json;\n\nconst payload = {\n  title:             newsItem.title,\n  source:            newsItem.source.name,\n  imageUrl:          newsItem.urlToImage || '',\n  url:               newsItem.url,\n  verdict:           parsed.verdict,\n  score:             parsed.score,\n  summary:           parsed.summary,\n  reasoning1,\n  reasoning2,\n  finding:           parsed.conclusion,\n  flags:             parsed.red_flags || [],\n  supportingSources: (parsed.supporting_sources || []).filter(s => s.name && s.url),\n  opposingSources: (parsed.opposing_sources || []).filter(s => s.name && s.url),\n  caption: `${parsed.summary}\\n\\nVerdict: ${parsed.verdict} (${parsed.score}/10)\\n\\nSource: ${newsItem.url}\\n\\n${parsed.supporting_sources.map(s => `✅ ${s.name}: ${s.article_url}`).join('\\n')}\\n${parsed.opposing_sources.map(s => `❌ ${s.name}: ${s.article_url}`).join('\\n')}\\n\\n#FactCheck #MediaLiteracy #BreakingNews`,\n  recommended_action: parsed.recommended_action,\n};\n\n// Call renderer (internal docker network address)\nconst rendererResponse = await helpers.httpRequest({\n  method: 'POST',\n  url: 'http://renderer:3500/render',\n  headers: { 'Content-Type': 'application/json' },\n  body: JSON.stringify(payload),\n});\n\nif (!rendererResponse.success) {\n  throw new Error('Renderer failed: ' + (rendererResponse.error || JSON.stringify(rendererResponse)));\n}\n\n// Renderer returns relative paths like /images/<batch>_slide1.jpg\nconst imageUrls = rendererResponse.images;\n\nreturn {\n  ...payload,\n  slideUrls: imageUrls,\n  slide1: imageUrls[0],\n  slide2: imageUrls[1],\n  slide3: imageUrls[2],\n  slide4: imageUrls[3],\n  slide5: imageUrls[4],\n  slide6: imageUrls[5],\n  slide7: imageUrls[6],\n  batchId: rendererResponse.batchId,\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -416,
+        304
+      ],
+      "id": "c8c950ba-7178-4770-abd3-e94343bd8f0f",
+      "name": "parse_response + call_renderer"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.anthropic.com/v1/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "x-api-key",
+              "value": "={{ $env.ANTHROPIC_API_KEY }}"
+            },
+            {
+              "name": "anthropic-version",
+              "value": "2023-06-01"
+            },
+            {
+              "name": "content-type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{\n{\n  \"model\": \"claude-sonnet-4-6\",\n  \"max_tokens\": 1000,\n  \"messages\": [\n    {\n      \"role\": \"user\",\n      \"content\": \"You are a professional news credibility analyst. Analyze the following news article snippet and return ONLY a raw valid JSON object. Do NOT wrap it in markdown code blocks. Do NOT use backticks. Do NOT include any text before or after the JSON object. Start your response with { and end with }.\\n\\nArticle Title: \" + $json.title + \"\\nDescription (snippet): \" + $json.description + \"\\nSource: \" + $json.source.name + \"\\nURL: \" + $json.url + \"\\nPublished: \" + $json.publishedAt + \"\\n\\nNote: Do not flag the published date, truncated descriptions, timestamp differences, press release origin, wire service distribution, source type, or missing editorial analysis as red flags. Only include red flags that relate to factual contradictions, unverified claims, emotional language, or biased framing within the story itself.\\n\\nRelated Coverage:\\n\" + $json.tavily.map(r => `- ${r.title} (${r.url}): ${r.snippet}`).join('\\n') + \"\\n\\nReturn this exact JSON structure:\\n{\\n  \\\"verdict\\\": \\\"CREDIBLE | QUESTIONABLE | UNRELIABLE\\\",\\n  \\\"score\\\": <number 1-10>,\\n  \\\"summary\\\": \\\"<2 sentence plain english explanation of the story>\\\",\\n  \\\"reasoning\\\": {\\n    \\\"headline\\\": \\\"<one punchy sentence — the main credibility finding>\\\",\\n    \\\"detail\\\": \\\"<2-3 sentences of supporting context and framing>\\\"\\n  },\\n  \\\"conclusion\\\": \\\"<one bold takeaway sentence telling the reader what to do with this information — distinct from summary and reasoning>\\\",\\n  \\\"source_reputation\\\": \\\"<one sentence on the publishing outlet>\\\",\\n  \\\"red_flags\\\": [\\n    {\\\"title\\\": \\\"<short flag name>\\\", \\\"description\\\": \\\"<one sentence>\\\"},\\n    {\\\"title\\\": \\\"<short flag name>\\\", \\\"description\\\": \\\"<one sentence>\\\"}\\n  ],\\n  \\\"supporting_sources\\\": [{\\\"name\\\": \\\"<outlet name>\\\", \\\"url\\\": \\\"<outlet homepage URL e.g. https://bbc.com>\\\", \\\"article_url\\\": \\\"<article URL from related coverage>\\\"}],\\n  \\\"opposing_sources\\\": [{\\\"name\\\": \\\"<outlet name>\\\", \\\"url\\\": \\\"<outlet homepage URL e.g. https://bbc.com>\\\", \\\"article_url\\\": \\\"<article URL from related coverage>\\\"}],\\n  \\\"recommended_action\\\": \\\"PUBLISH | REVIEW | DISCARD\\\"\\n}\"\n    }\n  ]\n}\n}}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        -640,
+        304
+      ],
+      "id": "9d6e7964-f586-43ec-be43-81ff3c876406",
+      "name": "claude request"
+    },
+    {
+      "parameters": {
+        "jsCode": "const IG_USER_ID = $env.META_INSTAGRAM_ACCOUNT_ID;\nconst ACCESS_TOKEN = $env.META_ACCESS_TOKEN;\nconst DOMAIN = $env.DOMAIN_NAME;\n\nconst containerIds = [];\n\nfor (const slidePath of $json.slideUrls) {\n  // Renderer returns relative paths (/images/...). Instagram needs a public URL,\n  // so the domain is prefixed only here.\n  const imageUrl = `https://${DOMAIN}${slidePath}`;\n\n  const res = await helpers.httpRequest({\n    method: 'POST',\n    url: `https://graph.facebook.com/v19.0/${IG_USER_ID}/media`,\n    headers: { 'Content-Type': 'application/json' },\n    body: JSON.stringify({\n      image_url: imageUrl,\n      is_carousel_item: true,\n      access_token: ACCESS_TOKEN,\n    }),\n  });\n\n  if (!res.id) {\n    throw new Error(`Container failed for: ${imageUrl} — ${JSON.stringify(res)}`);\n  }\n\n  containerIds.push(res.id);\n}\n\nreturn [{ json: { ...$json, carouselContainerIds: containerIds.join(',') } }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        480,
+        176
+      ],
+      "id": "368b6edd-2af6-4bcb-ba26-60f9a2df2509",
+      "name": "create containers for carousel images"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://graph.facebook.com/v19.0/{{ $env.META_INSTAGRAM_ACCOUNT_ID }}/media",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{\n{\n  \"media_type\": \"CAROUSEL\",\n  \"children\": $json.carouselContainerIds,\n  \"caption\": $json.caption,\n  \"access_token\": $env.META_ACCESS_TOKEN\n}\n}}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        704,
+        176
+      ],
+      "id": "e4ea5c37-3e77-4c8f-98c3-3ec7a29476a1",
+      "name": "create carousel media container"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://graph.facebook.com/v19.0/{{ $env.META_INSTAGRAM_ACCOUNT_ID }}/media_publish",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{\n{\n  \"creation_id\": $json.id,\n  \"access_token\": $env.META_ACCESS_TOKEN\n}\n}}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        928,
+        176
+      ],
+      "id": "7b89bdbe-395a-4cf2-ac8c-78102f6890b3",
+      "name": "publish carousel",
+      "retryOnFail": false,
+      "executeOnce": false,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        256,
+        176
+      ],
+      "id": "6fe951d6-fe02-488f-a876-a020db73d3e9",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 10,14,18,22 * * *"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -1776,
+        336
+      ],
+      "id": "37b42888-5d6f-4db8-8521-d60b3dabd58f",
+      "name": "Schedule Trigger1"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "NewsApi",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out": {
+      "main": [
+        [
+          {
+            "node": "tavily",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send message and wait for response": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "NewsApi": {
+      "main": [
+        [
+          {
+            "node": "Split Out",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "tavily": {
+      "main": [
+        [
+          {
+            "node": "tavily_results + original article",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "tavily_results + original article": {
+      "main": [
+        [
+          {
+            "node": "claude request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "parse_response + call_renderer": {
+      "main": [
+        [
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 1
+          },
+          {
+            "node": "Send message and wait for response",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "claude request": {
+      "main": [
+        [
+          {
+            "node": "parse_response + call_renderer",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "create containers for carousel images": {
+      "main": [
+        [
+          {
+            "node": "create carousel media container",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "create carousel media container": {
+      "main": [
+        [
+          {
+            "node": "publish carousel",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "create containers for carousel images",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger1": {
+      "main": [
+        [
+          {
+            "node": "NewsApi",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "7022fb74-7ef3-4fe0-adca-e2c6ea7cb561",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "0fd077d6d425950ed0a006568b684523473b7a7a145f62b15972ca7fd5ea1d62"
+  },
+  "nodeGroups": [],
+  "id": "qclb5BL4P8DdgagY",
+  "tags": []
+}

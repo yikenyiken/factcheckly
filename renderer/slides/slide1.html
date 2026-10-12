@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8"/>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..900;1,9..40,100..900&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{width:1080px;height:1350px;background:#111;display:flex;align-items:center;justify-content:center}
+.slide{width:1080px;height:1350px;display:flex;flex-direction:column;border:3px solid #2a2a2a;overflow:hidden;font-family:'DM Sans',sans-serif}
+
+.s1-img{height:620px;position:relative;overflow:hidden;flex-shrink:0;background:#1a1a1a}
+.s1-img img{width:100%;height:100%;object-fit:cover;display:block}
+.s1-img-fallback{width:100%;height:100%;background:linear-gradient(135deg,#1a1a1a 0%,#2a2a2a 100%);display:flex;align-items:center;justify-content:center}
+.s1-img-overlay{position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.25)}
+.s1-brand{position:absolute;top:48px;right:48px;display:flex;align-items:center;gap:16px;background:#222;padding:12px 24px 12px 16px;border-radius:8px}
+.brand-name-w{font-size:32px;font-weight:700;color:#fff;letter-spacing:.1em}
+
+.s1-accent{height:8px;background:{{verdictColor}};flex-shrink:0}
+.s1-body{background:#111;flex:1;padding:60px 64px 72px;display:flex;flex-direction:column}
+.s1-headline{font-size:52px;font-weight:600;color:#fff;line-height:1.38;flex:1}
+.s1-bottom{display:flex;align-items:flex-end;justify-content:space-between;margin-top:60px}
+.s1-verdict-label{font-size:26px;font-weight:700;color:#fff;letter-spacing:.1em;margin-bottom:16px;background:#222;padding:8px 20px;border-radius:6px;display:inline-block}
+.s1-verdict{font-size:72px;font-weight:800;color:{{verdictColor}}}
+.s1-source-label{font-size:26px;font-weight:700;color:#fff;letter-spacing:.08em;margin-bottom:12px;text-align:right;background:#222;padding:8px 20px;border-radius:6px;display:inline-block}
+.s1-source{text-transform:lowercase;font-size:40px;font-weight:600;color:#bbb;text-align:right}
+</style>
+</head>
+<body>
+<div class="slide">
+  <div class="s1-img">
+    <img src="{{imageUrl}}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" />
+    <div class="s1-img-fallback" style="display:none"></div>
+    <div class="s1-img-overlay"></div>
+    <div class="s1-brand">
+      <svg width="80px" height="80px" viewBox="190 30 300 300" xmlns="http://www.w3.org/2000/svg">
+        <rect x="190" y="30" width="300" height="300" rx="56" fill="#fff"/>
+        <circle cx="328" cy="168" r="86" fill="#f0f0f0"/>
+        <circle cx="328" cy="168" r="86" fill="none" stroke="#111" stroke-width="20"/>
+        <line x1="392" y1="232" x2="448" y2="288" fill="none" stroke="#111" stroke-width="20" stroke-linecap="round"/>
+        <polyline points="296,168 318,192 362,144" fill="none" stroke="rgb(74,222,128)" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <span class="brand-name-w">FACTCHECKLY</span>
+    </div>
+  </div>
+  <div class="s1-accent"></div>
+  <div class="s1-body">
+    <div class="s1-headline">{{title}}</div>
+    <div class="s1-bottom">
+      <div>
+        <div class="s1-verdict-label">VERDICT</div>
+        <div class="s1-verdict">{{verdict}}</div>
+      </div>
+      <div style="text-align:right">
+        <div class="s1-source-label">SOURCE</div>
+        <div class="s1-source">{{source}}</div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

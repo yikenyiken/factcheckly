@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8"/>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..900;1,9..40,100..900&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{width:1080px;height:1350px;background:#111;display:flex;align-items:center;justify-content:center}
+.slide{width:1080px;height:1350px;display:flex;flex-direction:column;border:3px solid #2a2a2a;overflow:hidden;font-family:'DM Sans',sans-serif;background:#111;padding:64px;position:relative}
+
+.s3-bg-quote{position:absolute;top:40px;right:40px;font-size:440px;color:#1a1a1a;font-family:Georgia,serif;line-height:1;z-index:0;pointer-events:none}
+.s3-content{position:relative;z-index:1;flex:1;display:flex;flex-direction:column}
+
+.top-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:80px}
+.slide-label{font-size:32px;font-weight:700;color:#fff;letter-spacing:.1em;background:#222;padding:12px 28px;border-radius:8px}
+.brand-row{display:flex;align-items:center;gap:16px;background:#222;padding:12px 24px 12px 16px;border-radius:8px}
+.brand-name-b{font-size:32px;font-weight:700;color:#fff;letter-spacing:.1em}
+
+.s3-reasoning{flex:1;display:flex;gap:48px;align-items:flex-start}
+.s3-border{width:8px;min-width:8px;border-radius:4px;background:{{verdictColor}};align-self:stretch}
+.s3-texts{display:flex;flex-direction:column;gap:48px}
+.s3-first{font-size:52px;font-weight:700;color:#fff;line-height:1.5}
+.s3-rest{font-size:38px;font-weight:580;color:#bbb;line-height:1.65}
+</style>
+</head>
+<body>
+<div class="slide">
+  <div class="s3-bg-quote">"</div>
+  <div class="s3-content">
+    <div class="top-row">
+      <div class="slide-label">REASONING</div>
+      <div class="brand-row">
+        <svg width="80px" height="80px" viewBox="190 30 300 300" xmlns="http://www.w3.org/2000/svg">
+          <rect x="190" y="30" width="300" height="300" rx="56" fill="#fff"/>
+          <circle cx="328" cy="168" r="86" fill="#f0f0f0"/>
+          <circle cx="328" cy="168" r="86" fill="none" stroke="#111" stroke-width="20"/>
+          <line x1="392" y1="232" x2="448" y2="288" fill="none" stroke="#111" stroke-width="20" stroke-linecap="round"/>
+          <polyline points="296,168 318,192 362,144" fill="none" stroke="rgb(74,222,128)" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span class="brand-name-b">FACTCHECKLY</span>
+      </div>
+    </div>
+    <div class="s3-reasoning">
+      <div class="s3-border"></div>
+      <div class="s3-texts">
+        <div class="s3-first">{{reasoning1}}</div>
+        <div class="s3-rest">{{reasoning2}}</div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

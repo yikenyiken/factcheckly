@@ -1,0 +1,9 @@
+{
+  "name": "factcheckly-renderer",
+  "version": "1.0.0",
+  "main": "server.js",
+  "dependencies": {
+    "puppeteer": "^24.42.0",
+    "sharp": "^0.34.5"
+  }
+}
