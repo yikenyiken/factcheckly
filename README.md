@@ -33,7 +33,7 @@ An automated news verification pipeline and slide generator that continuously an
 ### 1. Clone & Configure Environment
 
 ```bash
-git clone https://github.com/your-username/factcheckly.git
+git clone https://github.com/yikenyiken/factcheckly.git
 cd factcheckly
 
 cp .env.example .env
