@@ -4,6 +4,12 @@ An automated news verification pipeline and slide generator that continuously an
 
 ---
 
+## 🎬 Demo
+
+https://github.com/user-attachments/assets/b2eaa089-3868-4d2c-8539-4f4397cf75d1
+
+---
+
 ## 🏗️ Architecture & Infrastructure
 
 ```text
