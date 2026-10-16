@@ -58,7 +58,7 @@ docker compose up -d
 
 1. Access the n8n editor at `http://localhost:5678` (or via SSH tunnel).
 2. Create your initial admin account.
-3. Select **Workflows > Import from File** and upload `n8n/workflows/My_workflow.json`.
+3. Select **Workflows > Import from File** and upload `n8n/workflows/factcheckly_workflow.json`.
 4. Set up and link your **Discord Bot** credential inside n8n.
 5. Open the Discord node and replace the **Guild ID** and **Channel ID** with your own.
 6. Activate the workflow.
